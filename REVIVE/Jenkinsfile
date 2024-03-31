@@ -113,7 +113,7 @@ pipeline {
        
         stage('SonarQube Analysis') {
             steps {
-                dir("${WORKSPACE}/REVIVE/revive-dev-job") {
+                dir("${WORKSPACE}") {
                     script {
                         withSonarQubeEnv('sonar-scanner') {
                             sh "sonar-scanner"
