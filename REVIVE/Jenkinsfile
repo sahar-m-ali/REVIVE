@@ -38,131 +38,131 @@ pipeline {
     }
 
     stages {
-       //stage('Test golang') {
-	   //  agent {
-       //    docker {
-       //      image 'golang:1.20.1'
-       //      args '-u 0:0'
-       //    }
-       //   }
-       //    steps {
-       //        sh '''
-       //    cd $WORKSPACE/REVIVE/src/catalog/
-       //    go test
-       //        '''
-       //    }
-       //}
-//
-       //stage('Test maven-cart') {
-	   // agent {
-       //    docker {
-       //      image 'maven:3.8.7-openjdk-18'
-       //    }
-       //   }
-       //    steps {
-       //        sh '''
-       //    cd $WORKSPACE/REVIVE/src/cart/
-       //    mvn  test  -Dmaven.test.skip=true --quiet
-       //        '''
-       //    }
-       //}       
+       stage('Test golang') {
+	     agent {
+           docker {
+             image 'golang:1.20.1'
+             args '-u 0:0'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/catalog/
+           go test
+               '''
+           }
+       }
 
-       //stage('Test maven-orders') {
-	   //  agent {
-       //    docker {
-       //      image 'maven:3.8.7-openjdk-18'
-       //    }
-       //   }
-       //    steps {
-       //        sh '''
-       //    cd $WORKSPACE/REVIVE/src/orders/
-       //    mvn   test -Dmaven.test.skip=true --quiet 
-       //        '''
-       //    }
-       // }
-//
-       // stage('Test maven-ui') {
-	   //     agent {
-       //         docker {
-       //             image 'maven:3.8.7-openjdk-18'
-       //         }
-       //     }
-       //     steps {
-       //       sh '''
-       //         cd $WORKSPACE/REVIVE/src/ui/
-       //         mvn  test -Dmaven.test.skip=true --quiet 
-       //         '''
-       //     }
-       // }
-      //
-       //stage('Test maven-node') {
-	   //  agent {
-       //    docker {
-       //      image 'node'
-       //      args '-u 0:0'
-       //    }
-       //   }
-       //    steps {
-       //        sh '''
-       //    cd $WORKSPACE/REVIVE/src/checkout/
-       //    npm install
-       //   
-       //        '''
-       //    }
-       // }
+       stage('Test maven-cart') {
+	    agent {
+           docker {
+             image 'maven:3.8.7-openjdk-18'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/cart/
+           mvn  test  -Dmaven.test.skip=true --quiet
+               '''
+           }
+       }       
 
-        //stage('SonarQube analysis') {
-        //        agent {
-        //            docker {
-        //              image 'sonarsource/sonar-scanner-cli:4.8.0'
-        //            }
-        //           }
-        //           environment {
-        //    CI = 'true'
-        //    scannerHome='/opt/sonar-scanner'
-        //}
-        //        steps{
-        //            withSonarQubeEnv('sonar') {
-        //                sh "${scannerHome}/bin/sonar-scanner"
-        //            }
-        //        }
-        //    }
-        //stage("Quality Gate") {
-        //        steps {
-        //          timeout(time: 1, unit: 'HOURS') {
-        //            waitForQualityGate abortPipeline: true
-        //          }
-        //        }
-        //      }  
+       stage('Test maven-orders') {
+	     agent {
+           docker {
+             image 'maven:3.8.7-openjdk-18'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/orders/
+           mvn   test -Dmaven.test.skip=true --quiet 
+               '''
+           }
+        }
 
-        //stage('Build golang') {
-	    //  agent {
-        //    docker {
-        //      image 'golang'
-        //      args '-u 0:0'
-        //    }
-        //   }
-        //    steps {
-        //        sh '''
-        //    cd $WORKSPACE/REVIVE/src/catalog/
-        //    go build   -buildvcs=false
-        //        '''
-        //    }
-        // }
-//
-        //stage('Build maven-orders') {
-	    //   agent {
-        //     docker {
-        //       image 'maven:3.8.7-openjdk-18'
-        //     }
-        //    }
-        //     steps {
-        //         sh '''
-        //     cd $WORKSPACE/REVIVE/src/orders/
-        //     mvn  package -Dmaven.test.skip=true --quiet 
-        //         '''
-        //     }
-        // } 
+        stage('Test maven-ui') {
+	        agent {
+                docker {
+                    image 'maven:3.8.7-openjdk-18'
+                }
+            }
+            steps {
+              sh '''
+                cd $WORKSPACE/REVIVE/src/ui/
+                mvn  test -Dmaven.test.skip=true --quiet 
+                '''
+            }
+        }
+      
+       stage('Test maven-node') {
+	     agent {
+           docker {
+             image 'node'
+             args '-u 0:0'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/checkout/
+           npm install
+          
+               '''
+           }
+        }
+
+        stage('SonarQube analysis') {
+                agent {
+                    docker {
+                      image 'sonarsource/sonar-scanner-cli:4.8.0'
+                    }
+                   }
+                   environment {
+            CI = 'true'
+            scannerHome='/opt/sonar-scanner'
+        }
+                steps{
+                    withSonarQubeEnv('sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        stage("Quality Gate") {
+                steps {
+                  timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                  }
+                }
+              }  
+
+        stage('Build golang') {
+	      agent {
+            docker {
+              image 'golang'
+              args '-u 0:0'
+            }
+           }
+            steps {
+                sh '''
+            cd $WORKSPACE/REVIVE/src/catalog/
+            go build   -buildvcs=false
+                '''
+            }
+         }
+
+        stage('Build maven-orders') {
+	       agent {
+             docker {
+               image 'maven:3.8.7-openjdk-18'
+             }
+            }
+             steps {
+                 sh '''
+             cd $WORKSPACE/REVIVE/src/orders/
+             mvn  package -Dmaven.test.skip=true --quiet 
+                 '''
+             }
+         } 
 
         stage('Build checkout') {
             agent {
