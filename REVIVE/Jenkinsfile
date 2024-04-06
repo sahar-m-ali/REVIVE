@@ -135,34 +135,34 @@ pipeline {
         //        }
         //      }  
 
-        stage('Build golang') {
-	      agent {
-            docker {
-              image 'golang'
-              args '-u 0:0'
-            }
-           }
-            steps {
-                sh '''
-            cd $WORKSPACE/REVIVE/src/catalog/
-            go build   -buildvcs=false
-                '''
-            }
-         }
-
-        stage('Build maven-orders') {
-	       agent {
-             docker {
-               image 'maven:3.8.7-openjdk-18'
-             }
-            }
-             steps {
-                 sh '''
-             cd $WORKSPACE/REVIVE/src/orders/
-             mvn  package -Dmaven.test.skip=true --quiet 
-                 '''
-             }
-         } 
+        //stage('Build golang') {
+	    //  agent {
+        //    docker {
+        //      image 'golang'
+        //      args '-u 0:0'
+        //    }
+        //   }
+        //    steps {
+        //        sh '''
+        //    cd $WORKSPACE/REVIVE/src/catalog/
+        //    go build   -buildvcs=false
+        //        '''
+        //    }
+        // }
+//
+        //stage('Build maven-orders') {
+	    //   agent {
+        //     docker {
+        //       image 'maven:3.8.7-openjdk-18'
+        //     }
+        //    }
+        //     steps {
+        //         sh '''
+        //     cd $WORKSPACE/REVIVE/src/orders/
+        //     mvn  package -Dmaven.test.skip=true --quiet 
+        //         '''
+        //     }
+        // } 
 
         stage('Build checkout') {
             agent {
