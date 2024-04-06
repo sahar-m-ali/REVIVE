@@ -162,7 +162,25 @@ pipeline {
              mvn  package -Dmaven.test.skip=true --quiet 
                  '''
              }
-         }    
+         } 
+
+        stage('Build checkout') {
+            agent {
+                docker {
+                    image 'node:6-alpine' // Replace <NODE_VERSION> with the desired Node.js version
+                    args '-u 0:0' // Optionally, adjust user permissions as needed
+                }
+            }
+            steps {
+                dir("${WORKSPACE}/REVIVE/src/checkout/") {
+            
+                sh '''
+                npm install
+                '''
+                }
+            }
+        }
+   
         
     }
        
