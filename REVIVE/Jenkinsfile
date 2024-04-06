@@ -167,7 +167,7 @@ pipeline {
         stage('Build checkout') {
             agent {
                 docker {
-                    image 'node:6-alpine' // Replace <NODE_VERSION> with the desired Node.js version
+                    image 'node' // Replace <NODE_VERSION> with the desired Node.js version
                     args '-u 0:0' // Optionally, adjust user permissions as needed
                 }
             }
