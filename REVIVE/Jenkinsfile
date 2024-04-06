@@ -111,29 +111,58 @@ pipeline {
        //    }
        // }
 
-        stage('SonarQube analysis') {
-                agent {
-                    docker {
-                      image 'sonarsource/sonar-scanner-cli:4.8.0'
-                    }
-                   }
-                   environment {
-            CI = 'true'
-            scannerHome='/opt/sonar-scanner'
-        }
-                steps{
-                    withSonarQubeEnv('sonar') {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
+        //stage('SonarQube analysis') {
+        //        agent {
+        //            docker {
+        //              image 'sonarsource/sonar-scanner-cli:4.8.0'
+        //            }
+        //           }
+        //           environment {
+        //    CI = 'true'
+        //    scannerHome='/opt/sonar-scanner'
+        //}
+        //        steps{
+        //            withSonarQubeEnv('sonar') {
+        //                sh "${scannerHome}/bin/sonar-scanner"
+        //            }
+        //        }
+        //    }
+        //stage("Quality Gate") {
+        //        steps {
+        //          timeout(time: 1, unit: 'HOURS') {
+        //            waitForQualityGate abortPipeline: true
+        //          }
+        //        }
+        //      }  
+
+        stage('Build golang') {
+	      agent {
+            docker {
+              image 'golang'
+              args '-u 0:0'
             }
-        stage("Quality Gate") {
-                steps {
-                  timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                  }
-                }
-              }      
+           }
+            steps {
+                sh '''
+            cd $WORKSPACE/REVIVE/src/catalog/
+            go build   -buildvcs=false
+                '''
+            }
+         }
+
+        stage('Build maven-orders') {
+	       agent {
+             docker {
+               image 'maven:3.8.7-openjdk-18'
+             }
+            }
+             steps {
+                 sh '''
+             cd $WORKSPACE/REVIVE/src/orders/
+             mvn  package -Dmaven.test.skip=true --quiet 
+                 '''
+             }
+         }    
         
     }
        
