@@ -167,8 +167,8 @@ pipeline {
         stage('Build checkout') {
             agent {
                 docker {
-                    image 'node' // Replace <NODE_VERSION> with the desired Node.js version
-                    args '-u 0:0' // Optionally, adjust user permissions as needed
+                    image 'node' 
+                    args '-u 0:0' 
                 }
             }
             steps {
@@ -181,6 +181,60 @@ pipeline {
                 }
             }
         }
+
+        stage('Build-images-ui') {
+                steps {
+                    sh '''
+                    cd $WORKSPACE/REVIVE/src/ui
+                    docker build -t sahar5470/ui:jenkins-${BUILD_NUMBER} .
+                    '''
+                }
+        }
+        stage('Build-images-catalog') {
+              steps {
+                  sh '''
+                    cd $WORKSPACE/REVIVE/src/catalog
+                    docker build -t sahar5470/catalog:jenkins-${BUILD_NUMBER} .
+                    docker build -t sahar5470/catalog-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql .
+                  '''
+              }
+        }
+        stage('Build-images-cart') {
+            steps {
+                sh '''
+                  cd $WORKSPACE/REVIVE/src/cart
+                  docker build -t sahar5470/carts:jenkins-${BUILD_NUMBER} .
+                  docker build -t sahar5470/carts-dynamodb:jenkins-${BUILD_NUMBER} -f Dockerfile-dynamodb .
+                '''
+            }
+        }
+        stage('Build-images-orders') {
+            steps {
+                sh '''
+                  cd $WORKSPACE/REVIVE/src/orders
+                  docker build -t sahar5470/orders:jenkins-${BUILD_NUMBER} .
+                  docker build -t sahar5470/orders-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql .
+                  docker build -t sahar5470/orders-rabbitmq:jenkins-${BUILD_NUMBER} -f Dockerfile-rabbitmq .                  
+                '''
+            }
+        }
+        stage('Build-images-checkout') {
+            steps {
+                sh '''
+                cd $WORKSPACE/REVIVE/src/checkout
+                docker build -t sahar5470/checkout:jenkins-${BUILD_NUMBER} .
+                docker build -t sahar5470/checkout-db:jenkins-${BUILD_NUMBER} -f Dockerfile-db .
+                '''
+            }
+        }
+        stage('Build-images-assets') {
+            steps {
+                sh '''
+                  cd $WORKSPACE/REVIVE/src/assets
+                  docker build -t sahar5470/asset:jenkins-${BUILD_NUMBER} .
+                  '''
+            }
+        }    
    
         
     }
