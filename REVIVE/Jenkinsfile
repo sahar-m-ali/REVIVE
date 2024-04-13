@@ -164,23 +164,23 @@ pipeline {
        //      }
        //  } 
 
-        stage('Build checkout') {
-            agent {
-                docker {
-                    image 'node' 
-                    args '-u 0:0' 
-                }
-            }
-            steps {
-                dir("${WORKSPACE}/REVIVE/src/checkout/") {
-            
-                sh '''
-                npm install
-                npm run build
-                '''
-                }
-            }
-        }
+        //stage('Build checkout') {
+        //    agent {
+        //        docker {
+        //            image 'node' 
+        //            args '-u 0:0' 
+        //        }
+        //    }
+        //    steps {
+        //        dir("${WORKSPACE}/REVIVE/src/checkout/") {
+        //    
+        //        sh '''
+        //        npm install
+        //        npm run build
+        //        '''
+        //        }
+        //    }
+        //}
 
         stage('Build-images-ui') {
                 steps {
