@@ -225,7 +225,7 @@ pipeline {
               steps {
                   sh '''
                     docker push sahar5470/catalog:jenkins-${BUILD_NUMBER}
-                    docker push sahar5470/catalog-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql
+                    docker push sahar5470/catalog-mysql:jenkins-${BUILD_NUMBER}
                   '''
               }
         }
@@ -234,7 +234,7 @@ pipeline {
             steps {
                 sh '''
                   docker push sahar5470/carts:jenkins-${BUILD_NUMBER}
-                  docker push sahar5470/carts-dynamodb:jenkins-${BUILD_NUMBER} -f Dockerfile-dynamodb
+                  docker push sahar5470/carts-dynamodb:jenkins-${BUILD_NUMBER}
                 '''
             }
         }
@@ -243,8 +243,8 @@ pipeline {
             steps {
                 sh '''
                   docker push sahar5470/orders:jenkins-${BUILD_NUMBER}
-                  docker push sahar5470/orders-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql
-                  docker push sahar5470/orders-rabbitmq:jenkins-${BUILD_NUMBER} -f Dockerfile-rabbitmq                  
+                  docker push sahar5470/orders-mysql:jenkins-${BUILD_NUMBER}
+                  docker push sahar5470/orders-rabbitmq:jenkins-${BUILD_NUMBER}             
                 '''
             }
         }
@@ -253,7 +253,7 @@ pipeline {
             steps {
                 sh '''
                 docker push sahar5470/checkout:jenkins-${BUILD_NUMBER}
-                docker push sahar5470/checkout-db:jenkins-${BUILD_NUMBER} -f Dockerfile-db
+                docker push sahar5470/checkout-db:jenkins-${BUILD_NUMBER}
                 '''
             }
         }
