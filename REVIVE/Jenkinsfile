@@ -163,7 +163,7 @@ pipeline {
                 steps {
                     sh '''
                     cd $WORKSPACE/REVIVE/src/ui
-                    docker build -t sahar5470/revive/ui:jenkins-${BUILD_NUMBER} .
+                    docker build -t sahar5470/ui:jenkins-${BUILD_NUMBER} .
                     '''
                 }
         }
@@ -171,8 +171,8 @@ pipeline {
               steps {
                   sh '''
                     cd $WORKSPACE/REVIVE/src/catalog
-                    docker build -t sahar5470/revive/catalog:jenkins-${BUILD_NUMBER} .
-                    docker build -t sahar5470/revive/catalog-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql .
+                    docker build -t sahar5470/catalog:jenkins-${BUILD_NUMBER} .
+                    docker build -t sahar5470/catalog-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql .
                   '''
               }
         }
@@ -180,8 +180,8 @@ pipeline {
             steps {
                 sh '''
                   cd $WORKSPACE/REVIVE/src/cart
-                  docker build -t sahar5470/revive/carts:jenkins-${BUILD_NUMBER} .
-                  docker build -t sahar5470/revive/carts-dynamodb:jenkins-${BUILD_NUMBER} -f Dockerfile-dynamodb .
+                  docker build -t sahar5470/carts:jenkins-${BUILD_NUMBER} .
+                  docker build -t sahar5470/carts-dynamodb:jenkins-${BUILD_NUMBER} -f Dockerfile-dynamodb .
                 '''
             }
         }
@@ -189,9 +189,9 @@ pipeline {
             steps {
                 sh '''
                   cd $WORKSPACE/REVIVE/src/orders
-                  docker build -t sahar5470/revive/orders:jenkins-${BUILD_NUMBER} .
-                  docker build -t sahar5470/revive/orders-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql .
-                  docker build -t sahar5470/revive/orders-rabbitmq:jenkins-${BUILD_NUMBER} -f Dockerfile-rabbitmq .                  
+                  docker build -t sahar5470/orders:jenkins-${BUILD_NUMBER} .
+                  docker build -t sahar5470/orders-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql .
+                  docker build -t sahar5470/orders-rabbitmq:jenkins-${BUILD_NUMBER} -f Dockerfile-rabbitmq .                  
                 '''
             }
         }
@@ -199,8 +199,8 @@ pipeline {
             steps {
                 sh '''
                 cd $WORKSPACE/REVIVE/src/checkout
-                docker build -t sahar5470/revive/checkout:jenkins-${BUILD_NUMBER} .
-                docker build -t sahar5470/revive/checkout-db:jenkins-${BUILD_NUMBER} -f Dockerfile-db .
+                docker build -t sahar5470/checkout:jenkins-${BUILD_NUMBER} .
+                docker build -t sahar5470/checkout-db:jenkins-${BUILD_NUMBER} -f Dockerfile-db .
                 '''
             }
         }
@@ -208,7 +208,7 @@ pipeline {
             steps {
                 sh '''
                   cd $WORKSPACE/REVIVE/src/assets
-                  docker build -t sahar5470/revive/asset:jenkins-${BUILD_NUMBER} .
+                  docker build -t sahar5470/asset:jenkins-${BUILD_NUMBER} .
                   '''
             }
         }  
@@ -216,8 +216,7 @@ pipeline {
         stage('Push-images-ui') {
                 steps {
                     sh '''
-                    sudo -i
-                    docker push sahar5470/revive/ui:jenkins-${BUILD_NUMBER}
+                    docker push sahar5470/ui:jenkins-${BUILD_NUMBER}
                     '''
                 }
         }  
@@ -225,8 +224,8 @@ pipeline {
         stage('Push-images-catalog') {
               steps {
                   sh '''
-                    docker push sahar5470/revive/catalog:jenkins-${BUILD_NUMBER}
-                    docker push sahar5470/revive/catalog-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql
+                    docker push sahar5470/catalog:jenkins-${BUILD_NUMBER}
+                    docker push sahar5470/catalog-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql
                   '''
               }
         }
@@ -234,8 +233,8 @@ pipeline {
         stage('Push-images-cart') {
             steps {
                 sh '''
-                  docker push sahar5470/revive/carts:jenkins-${BUILD_NUMBER}
-                  docker push sahar5470/revive/carts-dynamodb:jenkins-${BUILD_NUMBER} -f Dockerfile-dynamodb
+                  docker push sahar5470/carts:jenkins-${BUILD_NUMBER}
+                  docker push sahar5470/carts-dynamodb:jenkins-${BUILD_NUMBER} -f Dockerfile-dynamodb
                 '''
             }
         }
@@ -243,9 +242,9 @@ pipeline {
         stage('Push-images-orders') {
             steps {
                 sh '''
-                  docker push sahar5470/revive/orders:jenkins-${BUILD_NUMBER}
-                  docker push sahar5470/revive/orders-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql
-                  docker push sahar5470/revive/orders-rabbitmq:jenkins-${BUILD_NUMBER} -f Dockerfile-rabbitmq                  
+                  docker push sahar5470/orders:jenkins-${BUILD_NUMBER}
+                  docker push sahar5470/orders-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql
+                  docker push sahar5470/orders-rabbitmq:jenkins-${BUILD_NUMBER} -f Dockerfile-rabbitmq                  
                 '''
             }
         }
@@ -253,8 +252,8 @@ pipeline {
         stage('Push-images-checkout') {
             steps {
                 sh '''
-                docker push sahar5470/revive/checkout:jenkins-${BUILD_NUMBER}
-                docker push sahar5470/revive/checkout-db:jenkins-${BUILD_NUMBER} -f Dockerfile-db
+                docker push sahar5470/checkout:jenkins-${BUILD_NUMBER}
+                docker push sahar5470/checkout-db:jenkins-${BUILD_NUMBER} -f Dockerfile-db
                 '''
             }
         }
@@ -262,7 +261,7 @@ pipeline {
         stage('Push-images-assets') {
             steps {
                 sh '''
-                docker push sahar5470/revive/asset:jenkins-${BUILD_NUMBER}
+                docker push sahar5470/asset:jenkins-${BUILD_NUMBER}
                   '''
             }
         }
