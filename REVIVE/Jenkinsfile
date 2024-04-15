@@ -216,6 +216,7 @@ pipeline {
         stage('Push-images-ui') {
                 steps {
                     sh '''
+                    sudo -i
                     docker push sahar5470/revive/ui:jenkins-${BUILD_NUMBER}
                     '''
                 }
