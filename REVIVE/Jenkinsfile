@@ -1,43 +1,20 @@
 pipeline {
     agent any
 
-    post {
-        success {
-            slackSend color: '#2EB67D',
-            channel: 'dev-alerts', 
-            message: "Revive Project Build Status" +
-            "\n Project Name: Revive" +
-            "\n Job Name: ${env.JOB_NAME}" +
-            "\n Build number: ${currentBuild.displayName}" +
-            "\n Build Status : SUCCESS" +
-            "\n Build url : ${env.BUILD_URL}"
-        }
-        failure {
-            slackSend color: '#E01E5A',
-            channel: 'dev-alerts',  
-            message: "Revive Project Build Status" +
-            "\n Project Name: Revive" +
-            "\n Job Name: ${env.JOB_NAME}" +
-            "\n Build number: ${currentBuild.displayName}" +
-            "\n Build Status : FAILED" +
-            "\n Build User : Sahar" +
-            "\n Action : Please check the console output to fix this job IMMEDIATELY" +
-            "\n Build url : ${env.BUILD_URL}"
-        }
-        unstable {
-            slackSend color: '#ECB22E',
-            channel: 'dev-alerts', 
-            message: "Revive Project Build Status" +
-            "\n Project Name: Revive" +
-            "\n Job Name: ${env.JOB_NAME}" +
-            "\n Build number: ${currentBuild.displayName}" +
-            "\n Build Status : UNSTABLE" +
-            "\n Action : Please check the console output to fix this job IMMEDIATELY" +
-            "\n Build url : ${env.BUILD_URL}"
-        }   
-    }
+    environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+	}
+
 
     stages {
+
+        stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+
        //stage('Test golang') {
 	   //  agent {
        //    docker {
@@ -234,9 +211,98 @@ pipeline {
                   docker build -t sahar5470/revive/asset:jenkins-${BUILD_NUMBER} .
                   '''
             }
-        }    
+        }  
+
+        stage('Push-images-ui') {
+                steps {
+                    sh '''
+                    docker push sahar5470/revive/ui:jenkins-${BUILD_NUMBER}
+                    '''
+                }
+        }  
+
+        stage('Push-images-catalog') {
+              steps {
+                  sh '''
+                    docker push sahar5470/revive/catalog:jenkins-${BUILD_NUMBER}
+                    docker push sahar5470/revive/catalog-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql
+                  '''
+              }
+        }
+
+        stage('Push-images-cart') {
+            steps {
+                sh '''
+                  docker push sahar5470/revive/carts:jenkins-${BUILD_NUMBER}
+                  docker push sahar5470/revive/carts-dynamodb:jenkins-${BUILD_NUMBER} -f Dockerfile-dynamodb
+                '''
+            }
+        }
+
+        stage('Push-images-orders') {
+            steps {
+                sh '''
+                  docker push sahar5470/revive/orders:jenkins-${BUILD_NUMBER}
+                  docker push sahar5470/revive/orders-mysql:jenkins-${BUILD_NUMBER} -f Dockerfile-mysql
+                  docker push sahar5470/revive/orders-rabbitmq:jenkins-${BUILD_NUMBER} -f Dockerfile-rabbitmq                  
+                '''
+            }
+        }
+
+        stage('Push-images-checkout') {
+            steps {
+                sh '''
+                docker push sahar5470/revive/checkout:jenkins-${BUILD_NUMBER}
+                docker push sahar5470/revive/checkout-db:jenkins-${BUILD_NUMBER} -f Dockerfile-db
+                '''
+            }
+        }
+
+        stage('Push-images-assets') {
+            steps {
+                sh '''
+                docker push sahar5470/revive/asset:jenkins-${BUILD_NUMBER}
+                  '''
+            }
+        }
    
         
+    }
+
+    post {
+        success {
+            slackSend color: '#2EB67D',
+            channel: 'dev-alerts', 
+            message: "Revive Project Build Status" +
+            "\n Project Name: Revive" +
+            "\n Job Name: ${env.JOB_NAME}" +
+            "\n Build number: ${currentBuild.displayName}" +
+            "\n Build Status : SUCCESS" +
+            "\n Build url : ${env.BUILD_URL}"
+        }
+        failure {
+            slackSend color: '#E01E5A',
+            channel: 'dev-alerts',  
+            message: "Revive Project Build Status" +
+            "\n Project Name: Revive" +
+            "\n Job Name: ${env.JOB_NAME}" +
+            "\n Build number: ${currentBuild.displayName}" +
+            "\n Build Status : FAILED" +
+            "\n Build User : Sahar" +
+            "\n Action : Please check the console output to fix this job IMMEDIATELY" +
+            "\n Build url : ${env.BUILD_URL}"
+        }
+        unstable {
+            slackSend color: '#ECB22E',
+            channel: 'dev-alerts', 
+            message: "Revive Project Build Status" +
+            "\n Project Name: Revive" +
+            "\n Job Name: ${env.JOB_NAME}" +
+            "\n Build number: ${currentBuild.displayName}" +
+            "\n Build Status : UNSTABLE" +
+            "\n Action : Please check the console output to fix this job IMMEDIATELY" +
+            "\n Build url : ${env.BUILD_URL}"
+        }   
     }
        
 }
