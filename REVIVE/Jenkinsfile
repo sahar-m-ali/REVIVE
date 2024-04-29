@@ -278,7 +278,7 @@ pipeline {
 
 	            sh '''
                 rm -rf revive-helm-charts || true 
-                git clone https://sahar-m-ali:$TOKEN@github.com/sahar-m-ali/revive-helm-charts.git
+                git clone https://github.com/sahar-m-ali/revive-helm-charts.git
                 cd revive-helm-charts
 cat << EOF > dev-values.yaml
        repository:
@@ -323,7 +323,7 @@ git config --global user.email "info@sahar5470.com"
    
    git add -A 
     git commit -m "Change from JENKINS" 
-    git push  https://github.com/sahar-m-ali/revive-helm-charts.git
+    git push  https://sahar-m-ali:$TOKEN@github.com/sahar-m-ali/revive-helm-charts.git
 	            '''
 	          }
 
