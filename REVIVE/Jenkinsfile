@@ -266,8 +266,76 @@ pipeline {
             }
         }
    
+
+    stage('helm-charts') {
+
+
+	      steps {
+	        script {
+	          withCredentials([
+	            string(credentialsId: 'github_token', variable: 'TOKEN')
+	          ]) {
+
+	            sh '''
+                rm -rf revive-helm-chart || true 
+                git clone https://github.com/sahar-m-ali/revive-helm-charts.git
+                cd revive-helm-chart
+cat << EOF > dev-values.yaml
+       repository:
+         tag:   jenkins-$BUILD_NUMBER
+         assets:
+          image: sahar5470/assets
+       
+         carts:
+          image: sahar5470/cart
+       
+         cart_dynamodb:
+          image: sahar5470/cart-dynamodb
         
+         catalog:
+          image: sahar5470/catalog
+       
+        
+         catalog_mysql:
+          image: sahar5470/catalog-mysql
+       
+         checkout:
+          image: sahar5470/checkout
+       
+         checkout_redis:
+          image: sahar5470/checkout-redis
+       
+         orders:
+          image: sahar5470/orders
+       
+         orders_mysql:
+          image: sahar5470/orders-mysql
+       
+         orders_rabbitmq:
+          image: sahar5470/orders-rabbitmq 
+       
+         ui:
+          image: sahar5470/ui
+EOF
+git config --global user.name "sahar5470"
+git config --global user.email "info@sahar5470.com"
+   cat  dev-values.yaml
+   
+   git add -A 
+    git commit -m "Change from JENKINS" 
+    git push  https://sahar5470:$TOKEN@github.com/sahar5470/revive-helm-charts.git
+	            '''
+	          }
+
+	        }
+
+	      }
+
+	    }
+
     }
+
+
 
     post {
         success {
