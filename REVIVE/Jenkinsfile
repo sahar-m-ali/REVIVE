@@ -277,9 +277,9 @@ pipeline {
 	          ]) {
 
 	            sh '''
-                rm -rf revive-helm-chart || true 
+                rm -rf revive-helm-charts || true 
                 git clone https://github.com/sahar-m-ali/revive-helm-charts.git
-                cd revive-helm-chart
+                cd revive-helm-charts
 cat << EOF > dev-values.yaml
        repository:
          tag:   jenkins-$BUILD_NUMBER
